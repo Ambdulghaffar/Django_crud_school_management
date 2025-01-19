@@ -1,0 +1,61 @@
+{% extends "home/base.html" %}
+
+{% block title %} 
+Modifier une inscription 
+{% endblock %} 
+
+{% block content %}
+<h2 class="mb-4 fst-italic container mt-5">Modifier l'inscription de {{ enrollment.student.first_name }} {{ enrollment.student.last_name }} au cours de {{enrollment.course.name}}</h2>
+
+<!-- Afficher les messages d'erreur ou de succès -->
+{% if messages %}
+  <div class="alert alert-danger container" role="alert">
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+  </div>
+{% endif %}
+
+<form method="POST" action="{% url 'update_enrollments' enrollment.id %}" class="container">
+  {% csrf_token %}
+  
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="course" class="form-label">Cours</label>
+      <select class="form-select" id="course" name="course" required>
+        <option value="">Sélectionnez un cours</option>
+        {% for course in courses %}
+          <option value="{{ course.id }}" 
+                  {% if enrollment.course.id == course.id %}selected{% endif %}>
+            {{ course.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label for="enrollment_date" class="form-label">Date d'inscription</label>
+      <input type="date" class="form-control" id="enrollment_date" name="enrollment_date" value="{{ enrollment.enrollment_date|date:'Y-m-d' }}" required>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="grade" class="form-label">Note</label>
+      <input type="text" class="form-control" id="grade" name="grade" value="{{ enrollment.grade }}" placeholder="Entrez la note (optionnel)">
+    </div>
+    <div class="col-md-6">
+      <label for="status" class="form-label">Statut</label>
+      <select class="form-select" id="status" name="status" required>
+        <option value="ENROLLED" {% if enrollment.status == 'ENROLLED' %}selected{% endif %}>Inscrit</option>
+        <option value="COMPLETED" {% if enrollment.status == 'COMPLETED' %}selected{% endif %}>Complété</option>
+        <option value="DROPPED" {% if enrollment.status == 'DROPPED' %}selected{% endif %}>Annulé</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+    <button type="reset" class="btn btn-secondary ms-3">Annuler</button>
+  </div>
+</form>
+{% endblock %}

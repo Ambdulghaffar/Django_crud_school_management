@@ -1,0 +1,21 @@
+{% extends "home/base.html" %} 
+{% block title %} Page d'acceuil {% endblock %}
+{% load static %}
+{% block content%}
+<div class="card text-bg-dark ">
+  <img src="{% static 'Images/img3.jpg' %}" style="
+    height: 600px;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;" 
+    alt="My image" />
+  <div class="card-img-overlay">
+    <h5 class="card-title"></h5>
+    <p class="card-text text-center fs-1 fw-bold fst-italic" style="margin-top: 150px">
+       Soyez le bienvenus dans notre site de gestion d'école
+    </p>
+    <p class="card-text"><small></small></p>
+  </div>
+</div>
+{% endblock %}

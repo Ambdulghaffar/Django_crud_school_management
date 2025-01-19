@@ -1,0 +1,59 @@
+{% extends "home/base.html" %}
+
+{% block title %} 
+Page pour la modification des enseignants
+{% endblock %} 
+
+{% block content %}
+<h2 class="mb-4 fst-italic container mt-5">Modifier les informations de {{teacher.first_name}} {{teacher.last_name}}</h2>
+
+<!-- Afficher les messages d'erreur ou de succès -->
+{% if messages %}
+  <div class="alert alert-danger container" role="alert">
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+  </div>
+{% endif %}
+
+<form method="POST" action="{% url 'update_teachers' teacher.id %}" class="container">
+    {% csrf_token %}
+  <div class="row mb-3">
+    <div class="col-md-6">
+        <label for="first_name" class="form-label">Nom</label>
+        <input type="text" class="form-control" id="first_name" name="first_name" value="{{teacher.first_name}}" placeholder="Entrez le nom" required>
+    </div>
+    <div class="col-md-6">
+        <label for="last_name" class="form-label">Prénom</label>
+        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ teacher.last_name }}" placeholder="Entrez le prénom" required>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" value="{{ teacher.email }}" placeholder="Entrez l'email" required>
+    </div>
+    <div class="col-md-6">
+      <label for="phone" class="form-label">Téléphone</label>
+      <input type="tel" class="form-control" id="phone" name="phone" value="{{ teacher.phone }}" placeholder="Entrez le numéro de téléphone" required>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="departement" class="form-label">Département</label>
+      <input type="text" class="form-control" id="departement" name="departement" value="{{ teacher.departement }}" placeholder="Entrez le département" required>
+    </div>
+    <div class="col-md-6">
+      <label for="hire_date" class="form-label">Date d'embauche</label>
+      <input type="date" class="form-control" id="hire_date" value="{{ teacher.hire_date }}" name="hire_date" required>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+    <button type="reset" class="btn btn-secondary ms-3">Annuler</button>
+  </div>
+</form>
+{% endblock %}

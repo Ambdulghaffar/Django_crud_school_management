@@ -1,0 +1,69 @@
+{% extends "home/base.html" %}
+
+{% block title %} 
+Modifier un cours 
+{% endblock %} 
+
+{% block content %}
+<h2 class="mb-4 fst-italic mt-5 container">Modifier le cours : {{ course.name }}</h2>
+
+<!-- Afficher les messages d'erreur ou de succès -->
+{% if messages %}
+  <div class="alert alert-danger container" role="alert">
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+  </div>
+{% endif %}
+
+<form method="POST" action="{% url 'update_courses' course.id %}" class="container">
+  {% csrf_token %}
+  
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="name" class="form-label">Nom du cours</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ course.name }}" placeholder="Entrez le nom du cours" required>
+    </div>
+    <div class="col-md-6">
+      <label for="credit_hours" class="form-label">Heures de crédit</label>
+      <input type="number" class="form-control" id="credit_hours" name="credit_hours" value="{{ course.credit_hours }}" placeholder="Entrez les heures de crédit" min="1" max="10" required>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="teacher" class="form-label">Enseignant</label>
+      <select class="form-select" id="teacher" name="teacher">
+        <option value="">Sélectionnez un enseignant</option>
+        {% for teacher in teachers %}
+          <option value="{{ teacher.id }}" 
+                  {% if course.teacher.id == teacher.id %}selected{% endif %}>
+            {{ teacher.first_name }} {{ teacher.last_name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label for="max_students" class="form-label">Nombre maximal d'étudiants</label>
+      <input type="number" class="form-control" id="max_students" name="max_students" value="{{ course.max_students }}" placeholder="Entrez le nombre maximal d'étudiants" min="1" required>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-6">
+        <label for="description" class="form-label">Description du cours</label>
+        <textarea class="form-control" id="description" name="description" rows="3" placeholder="Entrez la description du cours">{{ course.description }}</textarea>
+      </div>
+      <div class="col-md-6">
+        <label for="status" class="form-label">Statut du cours</label>
+        <select class="form-select" id="status" name="status">
+          <option value="True" {% if course.status %}selected{% endif %}>Actif</option>
+          <option value="False" {% if not course.status %}selected{% endif %}>Inactif</option>
+        </select>
+      </div>
+  </div>
+  <div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+    <button type="reset" class="btn btn-secondary ms-3">Annuler</button>
+  </div>
+</form>
+{% endblock %}

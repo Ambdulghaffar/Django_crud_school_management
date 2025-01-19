@@ -1,0 +1,59 @@
+{% extends "home/base.html" %}
+
+{% block title %} 
+Page d'ajout des enseignants
+{% endblock %} 
+
+{% block content %}
+<h2 class="mb-4 fst-italic container mt-5">Ajouter un nouvel enseignant</h2>
+
+<!-- Afficher les messages d'erreur ou de succès -->
+{% if messages %}
+  <div class="alert alert-danger container" role="alert">
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+  </div>
+{% endif %}
+
+<form method="POST" action="{% url "add_teachers" %}" class="container">
+    {% csrf_token %}
+  <div class="row mb-3">
+    <div class="col-md-6">
+        <label for="first_name" class="form-label">Nom</label>
+        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ form_data.first_name }}" placeholder="Entrez le nom" required>
+    </div>
+    <div class="col-md-6">
+        <label for="last_name" class="form-label">Prénom</label>
+        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ form_data.last_name }}" placeholder="Entrez le prénom" required>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" value="{{ form_data.email }}" placeholder="Entrez l'email" required>
+    </div>
+    <div class="col-md-6">
+      <label for="phone" class="form-label">Téléphone</label>
+      <input type="tel" class="form-control" id="phone" name="phone" value="{{ form_data.phone }}" placeholder="Entrez le numéro de téléphone" required>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="departement" class="form-label">Département</label>
+      <input type="text" class="form-control" id="departement" name="departement" value="{{ form_data.departement }}" placeholder="Entrez le département" required>
+    </div>
+    <div class="col-md-6">
+      <label for="hire_date" class="form-label">Date d'embauche</label>
+      <input type="date" class="form-control" id="hire_date" value="{{ form_data.hire_date }}" name="hire_date" required>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+    <button type="reset" class="btn btn-secondary ms-3">Annuler</button>
+  </div>
+</form>
+{% endblock %}

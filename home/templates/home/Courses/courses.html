@@ -1,0 +1,113 @@
+{% extends "home/base.html" %} {% block title %}Page des étudiants{% endblock %}
+{% block content %}
+<div class="d-flex container mt-5">
+  <h2 class="flex-grow-1 fst-italic">Bienvenus dans la page des cours</h2>
+  <div>
+    <a
+      href="{% url 'add_courses' %}"
+      type="button"
+      class="btn btn-primary"
+      >Ajouter</a
+    >
+  </div>
+  
+</div>
+{% if messages %}
+<div class="alert alert-success container" role="alert">
+  {% for message in messages %} {{ message }} {% endfor %}
+</div>
+{% endif %}
+<table class="table mt-4 container">
+  <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Nom</th>
+      <th scope="col">Déscription</th>
+      <th scope="col">Heures de crédit</th>
+      <th scope="col" class="ps-5">enseignant</th>
+      <th scope="col">Nbre max d'étudiants</th>
+      <th scope="col">Status</th>
+      <th scope="col" class="text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {% for course in courses %}
+    <tr>
+      <th scope="row">{{ course.id }}</th>
+      <td>{{ course.name }}</td>
+      <td>{{ course.description }}</td>
+      <td class="ps-5">{{ course.credit_hours }}</td> 
+      <td>
+        {% if course.teacher %}
+        {{ course.teacher }} ({{course.teacher.departement}})
+        {% else %}
+        <span class="text-muted fst-italic">Prof assigné à ce cours est supprimé</span>
+        {% endif %}
+      </td>
+      <td class="ps-5">{{course.max_students}}</td>
+      <td class=" fw-bold
+      {% if course.status %}
+      text-success
+      {% else %}
+      text-danger
+      {% endif %}
+      ">{{course.status|yesno:"Actif,Inactif"}}</td>
+      <td class="text-center">
+        <a href="{% url 'update_courses' course.id %}" class="text-primary"><i class="bi bi-pen-fill"></i></a>
+        <button
+          type="button"
+          class="btn text-danger ms-3"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteModal{{course.id}}"
+        >
+          <i class="bi bi-trash3-fill"></i>
+        </button>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="9" class="text-center">Aucun cours trouvé</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Modal -->
+ {% for course in courses  %}
+<div
+  class="modal fade"
+  id="deleteModal{{course.id}}"
+  aria-labelledby="deleteModalLabel{{course.id}}"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteModalLabel{{course.id}}" >Suppression</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Voulez-vous vraiment supprimer le cours de {{course.name}} ?
+      </div>
+      <div class="modal-footer">
+        <form method="POST" action="{% url 'delete_courses' course.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Supprimer</button>
+          <a href="#"  class="btn btn-secondary" data-bs-dismiss="modal">
+            Annuler
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

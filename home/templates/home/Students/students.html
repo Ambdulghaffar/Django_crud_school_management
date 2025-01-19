@@ -1,0 +1,103 @@
+{% extends "home/base.html" %} {% block title %}Page des étudiants{% endblock %}
+{% block content %}
+<div class="d-flex container mt-5">
+  <h2 class="flex-grow-1 fst-italic">Bienvenus dans la page des étudiants</h2>
+  <div>
+    <a
+      href="{% url 'add_students' %}"
+      type="button"
+      class="btn btn-primary"
+      >Ajouter</a
+    >
+  </div>
+  
+</div>
+{% if messages %}
+<div class="alert alert-success container" role="alert">
+  {% for message in messages %} {{ message }} {% endfor %}
+</div>
+{% endif %}
+<table class="table container mt-4">
+  <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Nom</th>
+      <th scope="col">Prénom</th>
+      <th scope="col">Date de naissance</th>
+      <th scope="col">Email</th>
+      <th scope="col">Téléphone</th>
+      <th scope="col">Adresse</th>
+      <th scope="col">Niveau</th>
+      <th scope="col" class="text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {% for student in students %}
+    <tr>
+      <th scope="row">{{ student.id }}</th>
+      <td>{{ student.first_name }}</td>
+      <td>{{ student.last_name }}</td>
+      <td>{{ student.date_of_birth|date:"d/m/Y" }}</td>
+      <td><a class="text-info text-decoration-none" href="https://mail.google.com/mail/?view=cm&fs=1&to={{ student.email }}" >{{ student.email }} </a></td>
+      <td> <a class="text-warning text-decoration-none" href="tel:{{ student.phone }}">{{ student.phone }}</a></td>
+      <td>{{ student.address }}</td> 
+      <td>{{ student.grade_level }}</td>
+      <td class="text-center">
+        <a href="{% url 'update_students' student.id %}" class="text-primary"><i class="bi bi-pen-fill"></i></a>
+        <button
+          type="button"
+          class="btn text-danger ms-3"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteModal{{ student.id }}"
+        >
+          <i class="bi bi-trash3-fill"></i>
+        </button>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="9" class="text-center">Aucun étudiant trouvé</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Modal -->
+ {% for student in students  %}
+<div
+  class="modal fade"
+  id="deleteModal{{ student.id }}"
+  aria-labelledby="deleteModalLabel{{ student.id }}"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteModalLabel{{ student.id }}" >Suppression</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Voulez-vous vraiment supprimer l'etudiant {{student.first_name}} {{student.last_name}} ?
+      </div>
+      <div class="modal-footer">
+        <form method="POST" action="{% url 'delete_students' student.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Supprimer</button>
+          <a href="{% url "students" %}"  class="btn btn-secondary" data-bs-dismiss="modal">
+            Annuler
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

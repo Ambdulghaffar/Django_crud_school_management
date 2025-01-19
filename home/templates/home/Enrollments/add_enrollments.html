@@ -1,0 +1,58 @@
+{% extends "home/base.html" %}
+
+{% block title %} 
+Ajouter une inscription 
+{% endblock %} 
+
+{% block content %}
+<h2 class="mb-4 fst-italic container mt-5">Ajouter une nouvelle inscription</h2>
+
+<!-- Afficher les messages d'erreur ou de succès -->
+{% if messages %}
+  <div class="alert alert-danger container" role="alert">
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+  </div>
+{% endif %}
+
+<form method="POST" action="{% url 'add_enrollments' %}" class="container">
+  {% csrf_token %}
+  
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="student" class="form-label">Étudiant</label>
+      <select class="form-select" id="student" name="student" required>
+        <option value="">Sélectionnez un étudiant</option>
+        {% for student in students %}
+          <option value="{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label for="course" class="form-label">Cours</label>
+      <select class="form-select" id="course" name="course" required>
+        <option value="">Sélectionnez un cours</option>
+        {% for course in courses %}
+          <option value="{{ course.id }}">{{ course.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="enrollment_date" class="form-label">Date d'inscription</label>
+      <input type="date" class="form-control" id="enrollment_date" name="enrollment_date" required>
+    </div>
+    <div class="col-md-6">
+      <label for="grade" class="form-label">Note</label>
+      <input type="text" class="form-control" id="grade" name="grade" placeholder="Entrez la note (optionnel)">
+    </div>
+  </div>
+  <div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+    <button type="reset" class="btn btn-secondary ms-3">Annuler</button>
+  </div>
+</form>
+{% endblock %}
