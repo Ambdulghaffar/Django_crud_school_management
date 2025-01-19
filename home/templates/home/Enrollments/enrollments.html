@@ -41,7 +41,13 @@
         <span class="text-muted fst-italic">L'étudiant inscrit est supprimé</span>
         {% endif %}
       </td>
-      <td>{{ enrollment.course }}</td>
+      <td>
+        {% if enrollment.course %}
+        {{ enrollment.course }}
+        {% else %}
+        <span class="text-muted fst-italic">Le cours assigné est supprimé</span>
+        {% endif %}
+      </td>
       <td>
         {% if enrollment.course.teacher %}
         {{ enrollment.course.teacher }}
